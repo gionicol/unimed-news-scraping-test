@@ -1,0 +1,5 @@
+beautifulsoup4
+pillow
+pip_system_certs
+qrcode
+requests
