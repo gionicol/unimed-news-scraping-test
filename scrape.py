@@ -16,6 +16,9 @@ NEWS_URL = "https://www.unimed.coop.br/site/web/aracatuba/noticias"
 
 FINGERPRINT_FILE = ".fingerprint"
 
+REPO = os.getenv("GITHUB_REPOSITORY", "local/local")
+GITHUB_PAGES_URL = f"https://{REPO.split('/')[0]}.github.io/{REPO.split('/')[1]}"
+
 QR_FOLDER = "qr"
 
 os.makedirs(QR_FOLDER, exist_ok=True)
@@ -35,6 +38,9 @@ MONTHS = {
     "Dezembro": 12
 }
 
+def xml_safe(text):
+    return escape(text, {"\"": "&quot;"})
+
 
 def parse_date(date_text):
     parts = date_text.replace(" de ", " ").split()
@@ -46,6 +52,7 @@ def parse_date(date_text):
     dt = datetime(year, month, day, 12, 0, 0)
 
     return format_datetime(dt)
+
 
 
 def generate_qr(article_url):
@@ -64,7 +71,11 @@ def generate_qr(article_url):
         img = qrcode.make(article_url)
         img.save(filepath)
 
-    return os.path.abspath(filepath)
+    qr_url = (
+        f"{GITHUB_PAGES_URL}/qr/{filename}"
+    )
+
+    return qr_url
 
 
 def scrape():
@@ -162,19 +173,19 @@ def save_rss(data):
 <item>
 <title>{title}</title>
 
-<link>{item['url']}</link>
+<link>{xml_safe(item['url'])}</link>
 
 <description><![CDATA[{description}]]></description>
 
 <pubDate>{item['date']}</pubDate>
 
-<guid isPermaLink="true">{item['url']}</guid>
+<guid isPermaLink="true">{xml_safe(item['url'])}</guid>
 
 <enclosure
-    url="{item['image']}"
+    url="{xml_safe(item['image'])}"
     type="image/jpeg" />
 
-<qr>{item['qr']}</qr>
+<qr>{xml_safe(item['qr'])}</qr>
 
 </item>
 """
