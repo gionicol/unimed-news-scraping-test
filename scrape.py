@@ -70,7 +70,7 @@ def generate_qr(article_url):
 def scrape():
     response = requests.get(
         NEWS_URL,
-        verify=certifi.where()
+        verify=False
     )
 
     soup = BeautifulSoup(
