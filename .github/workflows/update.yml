@@ -2,7 +2,7 @@ name: Update Unimed Feed
 
 on:
   schedule:
-    - cron: "0 * * * *" #roda a cada hora (para a cada 30 minutos: "*/30 * * * *" | para a cada x horas: "0 */x * * *")
+    - cron: "*/5 * * * *" #roda a cada hora (para a cada 30 minutos: "*/30 * * * *" | para a cada x horas: "0 */x * * *")
 
   workflow_dispatch:
 
