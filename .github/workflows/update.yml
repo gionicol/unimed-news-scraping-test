@@ -29,6 +29,7 @@ jobs:
       - name: Run scraper
         run: |
           python scrape.py
+        timeout-minutes: 50
 
       - name: Commit changes
         run: |
