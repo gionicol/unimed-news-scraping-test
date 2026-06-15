@@ -2,7 +2,7 @@ name: Update Unimed Feed
 
 on:
   schedule:
-    - cron: "*/5 * * * *" #roda a cada hora (para a cada 30 minutos: "*/30 * * * *" | para a cada x horas: "0 */x * * *")
+    - cron: "0 * * * *" #roda a cada hora (para a cada 30 minutos: "*/30 * * * *" | para a cada x horas: "0 */x * * *")
 
   workflow_dispatch:
 
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13.14"
 
       - name: Install dependencies
         run: |
