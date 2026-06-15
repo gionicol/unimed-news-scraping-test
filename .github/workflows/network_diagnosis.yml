@@ -1,4 +1,4 @@
-name: Update Unimed Feed
+name: Network Diagnosis
 
 on:
   workflow_dispatch:
