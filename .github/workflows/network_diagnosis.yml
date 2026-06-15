@@ -1,0 +1,20 @@
+name: Update Unimed Feed
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-feed:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Network Diagnostics
+        run: |
+          echo "=== Testing DNS Resolution ==="
+          nslookup your-target-url.com
+          
+          echo "=== Testing Network Route ==="
+          ping -c 3 your-target-url.com || true
+          
+          echo "=== Verbose Connection Test ==="
+          curl -I -v --connect-timeout 10 https://your-target-url.com
