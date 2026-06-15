@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unimed Araçatuba</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green-dark: #0b5c4f;
+      --green-mid: #0e6b5a;
+      --green-light: #c5e04b;
+      --white: #ffffff;
+      --gray-placeholder: #b0b0b0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Nunito', sans-serif;
+    }
+
+    /* ── BACKGROUND ── */
+    .scene {
+      position: relative;
+      width: 1280px;
+      height: 720px;
+      background-color: var(--green-dark);
+      overflow: hidden;
+    }
+
+    /* subtle geometric overlay matching the diamond/rhombus pattern */
+    .bg-pattern {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.12;
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          transparent,
+          transparent 80px,
+          rgba(255,255,255,0.18) 80px,
+          rgba(255,255,255,0.18) 82px
+        ),
+        repeating-linear-gradient(
+          -45deg,
+          transparent,
+          transparent 80px,
+          rgba(255,255,255,0.18) 80px,
+          rgba(255,255,255,0.18) 82px
+        );
+    }
+
+    /* Pine tree SVG watermark centred in background */
+    .bg-pine {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 520px;
+      height: 520px;
+      opacity: 0.06;
+      z-index: 0;
+    }
+
+    /* ── INTRO TITLE (phase 1) ── */
+    .intro-title {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      pointer-events: none;
+      /* fade in → hold → retract */
+      animation: introFadeIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.1s both,
+                 introRetract 0.7s cubic-bezier(0.55,0,1,0.45) 2.4s both;
+    }
+
+    .intro-title h1 {
+      color: var(--green-light);
+      font-size: 64px;
+      font-weight: 800;
+      line-height: 1.15;
+      text-align: center;
+      letter-spacing: -0.5px;
+      /* The retract moves+scales the text toward the top header position */
+      transform-origin: center top;
+    }
+
+    @keyframes introFadeIn {
+      from { opacity: 0; transform: scale(0.94); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* retract: shrink + move up, then disappear (the real header takes over) */
+    @keyframes introRetract {
+      0%   { opacity: 1; transform: translateY(0)   scale(1); }
+      70%  { opacity: 0; transform: translateY(-240px) scale(0.55); }
+      100% { opacity: 0; transform: translateY(-260px) scale(0.5);  pointer-events: none; }
+    }
+
+    /* ── CARD LAYOUT (phase 2) ── */
+    /* All card children are hidden until 2.8 s then revealed */
+    .card-header,
+    .card-body {
+      position: absolute;
+      z-index: 5;
+    }
+
+    /* ── HEADER BAR ── */
+    .card-header {
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 112px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 24px;
+    }
+
+    /* Logo left */
+    .logo-left {
+      position: absolute;
+      left: 28px;
+      top: 50%;
+      transform: translateX(0) translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      /* slide from left */
+      animation: slideFromLeft 0.65s cubic-bezier(0.22,1,0.36,1) 3.2s both;
+    }
+
+    .logo-left img {
+      width: 130px;
+      height: auto;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* placeholder when image absent */
+    .logo-placeholder {
+      width: 130px;
+      height: 50px;
+      background: rgba(255,255,255,0.12);
+      border: 2px dashed rgba(255,255,255,0.35);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 11px;
+      font-family: 'Lato', sans-serif;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .logo-sub {
+      color: rgba(255,255,255,0.75);
+      font-family: 'Lato', sans-serif;
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+    }
+
+    /* Centre title */
+    .header-title {
+      text-align: center;
+      color: var(--green-light);
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.2;
+      animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 3.05s both;
+    }
+
+    /* QR code right */
+    .qr-block {
+      position: absolute;
+      right: 28px;
+      top: 50%;
+      transform: translateX(0) translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      animation: slideFromRight 0.65s cubic-bezier(0.22,1,0.36,1) 3.2s both;
+    }
+
+    .qr-img {
+      width: 90px;
+      height: 90px;
+      background: rgba(255,255,255,0.12);
+      border: 2px dashed rgba(255,255,255,0.35);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      font-family: 'Lato', sans-serif;
+      text-align: center;
+    }
+
+    .qr-label {
+      color: var(--white);
+      font-family: 'Lato', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.4px;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    /* ── BODY ── */
+    .card-body {
+      top: 112px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 80px 32px;
+      gap: 18px;
+      animation: slideFromBottom 0.7s cubic-bezier(0.22,1,0.36,1) 3.1s both;
+    }
+
+    /* Image box with mask */
+    .image-box {
+      width: 100%;
+      max-width: 800px;
+      height: 370px;
+      border-radius: 20px;
+      overflow: hidden;
+      background: var(--gray-placeholder);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    /* Text pill */
+    .text-pill {
+      background: var(--white);
+      border-radius: 999px;
+      padding: 20px 48px;
+      max-width: 800px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .text-pill p {
+      font-family: 'Lato', sans-serif;
+      font-size: 20px;
+      font-weight: 400;
+      color: #1a3a30;
+      line-height: 1.55;
+    }
+
+    /* Corner accents (bottom-right rounded bracket decoration) */
+    .corner-accent {
+      position: absolute;
+      bottom: 36px;
+      right: 36px;
+      width: 52px;
+      height: 52px;
+      border: 4px solid var(--green-light);
+      border-radius: 14px;
+      border-top: none;
+      border-left: none;
+      z-index: 6;
+      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 3.35s both;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideFromLeft {
+      from { opacity: 0; transform: translateX(-80px) translateY(-50%); }
+      to   { opacity: 1; transform: translateX(0)     translateY(-50%); }
+    }
+
+    @keyframes slideFromRight {
+      from { opacity: 0; transform: translateX(80px) translateY(-50%); }
+      to   { opacity: 1; transform: translateX(0)    translateY(-50%); }
+    }
+
+    @keyframes slideFromBottom {
+      from { opacity: 0; transform: translateY(80px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0);    }
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scene">
+
+  <!-- Background pattern -->
+  <div class="bg-pattern"></div>
+
+  <!-- Pine tree watermark SVG -->
+  <svg class="bg-pine" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- Trunk -->
+    <rect x="88" y="220" width="24" height="36" rx="4" fill="white"/>
+    <!-- Bottom layer -->
+    <polygon points="100,130 28,220 172,220" fill="white"/>
+    <!-- Middle layer -->
+    <polygon points="100,70 36,160 164,160" fill="white"/>
+    <!-- Top layer -->
+    <polygon points="100,10 48,110 152,110" fill="white"/>
+  </svg>
+
+  <!-- ═══════════════════════════ PHASE 1: Intro title ═══════════════════════════ -->
+  <div class="intro-title" aria-hidden="true">
+    <h1>Lorem Ipsum Dolor<br>Sit Amet</h1>
+  </div>
+
+  <!-- ═══════════════════════════ PHASE 2: Card layout ═══════════════════════════ -->
+
+  <!-- Header -->
+  <header class="card-header">
+
+    <!-- Logo top-left (placeholder) -->
+    <div class="logo-left">
+      <div class="logo-placeholder">LOGO<br>UNIMED</div>
+      <span class="logo-sub">Araçatuba</span>
+    </div>
+
+    <!-- Centre title -->
+    <h2 class="header-title">Lorem Ipsum Dolor<br>Sit Amet</h2>
+
+    <!-- QR code + label top-right -->
+    <div class="qr-block">
+      <div class="qr-img">QR<br>CODE</div>
+      <p class="qr-label">Leia a matéria<br>na íntegra</p>
+    </div>
+
+  </header>
+
+  <!-- Body -->
+  <main class="card-body">
+
+    <!-- Image masked box -->
+    <div class="image-box">
+      <img
+        src="https://blocks.astratic.com/img/general-img-portrait.png"
+        alt="Imagem da matéria"
+        loading="eager"
+      />
+    </div>
+
+    <!-- Text pill -->
+    <div class="text-pill">
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum convallis purus sed dictum. Sed facilisis rhoncus dui eget facilisis.</p>
+    </div>
+
+  </main>
+
+  <!-- Corner accent decoration -->
+  <div class="corner-accent" aria-hidden="true"></div>
+
+</div>
+
+</body>
+</html>
