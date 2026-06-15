@@ -4,17 +4,17 @@ on:
   workflow_dispatch:
 
 jobs:
-  update-feed:
+  run-diagnosis:
     runs-on: ubuntu-latest
 
     steps:
       - name: Network Diagnostics
         run: |
           echo "=== Testing DNS Resolution ==="
-          nslookup your-target-url.com
+          nslookup https://www.unimed.coop.br/site/web/aracatuba/noticias
           
           echo "=== Testing Network Route ==="
-          ping -c 3 your-target-url.com || true
+          ping -c 3 https://www.unimed.coop.br/site/web/aracatuba/noticias || true
           
           echo "=== Verbose Connection Test ==="
-          curl -I -v --connect-timeout 10 https://your-target-url.com
+          curl -I -v --connect-timeout 10 https://www.unimed.coop.br/site/web/aracatuba/noticias
