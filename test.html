@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Away Counter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        #counter-div {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        #count {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="counter-div">
+        <h2>Times you left the page:</h2>
+        <div id="count">0</div>
+    </div>
+
+    <script>
+        let awayCount = 0;
+        const countDisplay = document.getElementById('count');
+
+        // Listen for when the page visibility changes (user switches tabs, minimizes, or changes windows)
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+                // The page is now hidden, increment the counter
+                awayCount++;
+                countDisplay.textContent = awayCount;
+                console.log('You left the page! Count: ' + awayCount);
+            }
+        });
+    </script>
+
+</body>
+</html>
