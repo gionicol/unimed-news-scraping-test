@@ -4,12 +4,15 @@ import hashlib
 import requests
 import qrcode
 import certifi
+import time
 
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 from email.utils import format_datetime
 from xml.sax.saxutils import escape
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 BASE_URL = "https://www.unimed.coop.br"
 NEWS_URL = "https://www.unimed.coop.br/site/web/aracatuba/noticias"
@@ -78,11 +81,42 @@ def generate_qr(article_url):
     return qr_url
 
 
-def scrape():
-    response = requests.get(
-        NEWS_URL,
-        verify=False
+def get_session():
+    session = requests.Session()
+
+    retry = Retry(
+        total=None,
+        backoff_factor=1,
+        status_forcelist=[429, 500, 502, 503, 504]
     )
+
+    adapter = HTTPAdapter(max_retries=retry)
+
+    session.mount("http://", adapter)
+    session.mount("https://", adapter)
+
+    return session
+
+
+def scrape():
+    try:
+        session = get_session()
+
+        response = session.get(
+            NEWS_URL,
+            timeout=30,
+            headers={
+                "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"
+            },
+            verify=certifi.where()
+        )
+        
+        if response.status_code == 200:
+            print("Target reached successfully!")
+        
+    except requests.exceptions.RequestException as e:
+        # Catches Timeouts, ConnectionErrors, DNS drops, etc.
+        print(f"Network error occurred: {e}. Retrying anyway...")
 
     soup = BeautifulSoup(
         response.text,
