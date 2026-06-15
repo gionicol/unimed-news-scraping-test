@@ -3,55 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Away Counter</title>
+    <title>Simple Stopwatch</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f0f2f5;
+            background-color: #121212;
+            color: #ffffff;
+            font-family: monospace;
         }
-        #counter-div {
-            background-color: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        h2 {
-            margin-top: 0;
-            color: #333;
-        }
-        #count {
-            font-size: 4rem;
+        #stopwatch {
+            font-size: 10vw;
             font-weight: bold;
-            color: #007bff;
         }
     </style>
 </head>
 <body>
 
-    <div id="counter-div">
-        <h2>Times you left the page:</h2>
-        <div id="count">0</div>
-    </div>
+    <div id="stopwatch">00:00:00.00</div>
 
     <script>
-        let awayCount = 0;
-        const countDisplay = document.getElementById('count');
+        const stopwatchElement = document.getElementById('stopwatch');
+        const startTime = Date.now();
 
-        // Listen for when the page visibility changes (user switches tabs, minimizes, or changes windows)
-        document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'hidden') {
-                // The page is now hidden, increment the counter
-                awayCount++;
-                countDisplay.textContent = awayCount;
-                console.log('You left the page! Count: ' + awayCount);
-            }
-        });
+        function updateStopwatch() {
+            const elapsedTime = Date.now() - startTime;
+
+            const hours = Math.floor(elapsedTime / 3600000);
+            const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            const milliseconds = Math.floor((elapsedTime % 1000) / 10);
+
+            const pad = (num, size = 2) => String(num).padStart(size, '0');
+
+            stopwatchElement.textContent = 
+                `${pad(hours)}:${pad(minutes)}:${pad(seconds)}.${pad(milliseconds)}`;
+
+            requestAnimationFrame(updateStopwatch);
+        }
+
+        requestAnimationFrame(updateStopwatch);
     </script>
 
 </body>
