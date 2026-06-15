@@ -108,7 +108,7 @@ def scrape():
             headers={
                 "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"
             },
-            verify=certifi.where()
+            verify=False
         )
         
         if response.status_code == 200:
