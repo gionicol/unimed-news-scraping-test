@@ -11,10 +11,10 @@ jobs:
       - name: Network Diagnostics
         run: |
           echo "=== Testing DNS Resolution ==="
-          nslookup https://www.unimed.coop.br/site/web/aracatuba/noticias
+          nslookup unimed.coop.br
           
           echo "=== Testing Network Route ==="
-          ping -c 3 https://www.unimed.coop.br/site/web/aracatuba/noticias || true
+          ping -c 3 unimed.coop.br || true
           
           echo "=== Verbose Connection Test ==="
-          curl -I -v --connect-timeout 10 https://www.unimed.coop.br/site/web/aracatuba/noticias
+          curl -I -v --connect-timeout 10 https://www.unimed.coop.br
