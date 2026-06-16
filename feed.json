@@ -16,14 +16,6 @@
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/287d671d3c9070ab67a6d7126ba64fc1.png"
   },
   {
-    "title": "Unimed Araçatuba promove ações do Maio Amarelo",
-    "subtitle": "Ação organizada pela CIPA reuniu colaboradores em palestra educativa com foco em segurança, responsabilidade e prevenção de acidentes no trânsito.",
-    "date": "Fri, 29 May 2026 12:00:00 -0000",
-    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-refor%C3%A7a-conscientiza%C3%A7%C3%A3o-no-tr%C3%A2nsito-com-a%C3%A7%C3%B5es-do-maio-amarelo?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
-    "image": "https://www.unimed.coop.br/site/documents/29485795/87633508/WhatsApp+Image+2026-05-28+at+14.39.37.jpeg/ae2dd05a-6497-b101-54de-1ec341d87ef9?version=1.0&t=1780067998720&imagePreview=1",
-    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/4731df10530ffe6521642c921b25b0cc.png"
-  },
-  {
     "title": "HUA promove Maio Roxo com pacientes oncológicos",
     "subtitle": "Evento realizado pelo Centro de Terapia Antineoplásica reuniu pacientes, familiares e especialistas em uma tarde de acolhimento, informação e cuidado humanizado.",
     "date": "Mon, 01 Jun 2026 12:00:00 -0000",
@@ -54,6 +46,14 @@
     "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-refor%C3%A7a-cultura-esg-com-palestras?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
     "image": "https://www.unimed.coop.br/site/documents/29485795/88437039/WhatsApp+Image+2026-06-11+at+08.32.08.jpeg/ccfc7806-4d51-107c-78c9-e6d286fc9262?version=1.0&t=1781182684865&imagePreview=1",
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/ad0d0bf46c7c79d4010de9650b31abb2.png"
+  },
+  {
+    "title": "Unimed Araçatuba leva experiências sobre TEA a encontro estadual",
+    "subtitle": "As iniciativas foram apresentadas durante encontro promovido pela Unimed Fesp, que reuniu representantes de cooperativas do Estado de São Paulo para compartilhar experiências e fortalecer a assistência às pessoas com TEA.",
+    "date": "Tue, 16 Jun 2026 12:00:00 -0000",
+    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-apresenta-a%C3%A7%C3%B5es-para-atendimento-de-pacientes-com-tea-em-encontro-estadual?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
+    "image": "https://www.unimed.coop.br/site/documents/29485795/88752753/ChatGPT+Image+16+de+jun.+de+2026%2C+11_15_23.png/0dbfbfc5-6e8c-d9e6-bbdf-cb1f5bca9122?version=1.0&t=1781619608922&imagePreview=1",
+    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/2482aa36a56bc9cc3fe2eeb1bdad5234.png"
   },
   {
     "title": "HUA reforça segurança com tecnologia para monitorar a higienização",
