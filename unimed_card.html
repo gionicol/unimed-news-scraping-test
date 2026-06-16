@@ -1,391 +1,439 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unimed Araçatuba</title>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Lato:wght@400;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Unimed Araçatuba</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Lato:wght@400;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        @font-face {
+            font-family: 'Unmdsns';
+            font-style: normal;
+            font-weight: normal;
+            src: url(fonts/rg.otf) format('opentype');
+        }
 
-    :root {
-      --green-dark: #0b5c4f;
-      --green-mid: #0e6b5a;
-      --green-light: #c5e04b;
-      --white: #ffffff;
-      --gray-placeholder: #b0b0b0;
-    }
+        @font-face {
+            font-family: 'Unmdsns';
+            font-style: normal;
+            font-weight: bold;
+            src: url(fonts/bd.otf) format('opentype');
+        }
 
-    html, body {
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: 'Nunito', sans-serif;
-    }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    /* ── BACKGROUND ── */
-    .scene {
-      position: relative;
-      width: 1280px;
-      height: 720px;
-      background-color: var(--green-dark);
-      overflow: hidden;
-    }
+        :root {
+            --green-dark: #004F4A;
+            --green-light: #c5e04b;
+            --white: #ffffff;
 
-    /* subtle geometric overlay matching the diamond/rhombus pattern */
-    .bg-pattern {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      opacity: 0.12;
-      background-image:
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 80px,
-          rgba(255,255,255,0.18) 80px,
-          rgba(255,255,255,0.18) 82px
-        ),
-        repeating-linear-gradient(
-          -45deg,
-          transparent,
-          transparent 80px,
-          rgba(255,255,255,0.18) 80px,
-          rgba(255,255,255,0.18) 82px
-        );
-    }
+            /* Animation timing base — shift everything by 4 s */
+            --t-fade-in: 4.1s;
+            --t-retract: 6.4s;
+            --t-header-title: 7.05s;
+            --t-slide-sides: 7.2s;
+            --t-body: 7.1s;
+            --t-img-scale: 11.9s;
+            --t-pine-scale: 19s;
+        }
 
-    /* Pine tree SVG watermark centred in background */
-    .bg-pine {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 520px;
-      height: 520px;
-      opacity: 0.06;
-      z-index: 0;
-    }
+        html,
+        body {
+            font-family: "Unmdsns";
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--green-dark);
+        }
 
-    /* ── INTRO TITLE (phase 1) ── */
-    .intro-title {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      pointer-events: none;
-      /* fade in → hold → retract */
-      animation: introFadeIn 0.9s cubic-bezier(0.22,1,0.36,1) 4.1s both,
-                 introRetract 0.7s cubic-bezier(0.55,0,1,0.45) 6.4s both;
-    }
+        /* ── SCENE ── */
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--green-dark);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
 
-    .intro-title h1 {
-      color: var(--green-light);
-      font-size: 64px;
-      font-weight: 800;
-      line-height: 1.15;
-      text-align: center;
-      letter-spacing: -0.5px;
-      /* The retract moves+scales the text toward the top header position */
-      transform-origin: center top;
-    }
+        /* ── PINE TREE BACKGROUND ──
+       pinheiro.svg is 1030×690 (ratio ≈ 1.493).
+       We scale it to ~115vh height and nudge it right.       */
+        .bg-pine {
+            position: absolute;
+            /* height slightly larger than viewport */
+            height: 115vh;
+            width: auto;
+            /* keep native aspect ratio: 1030/690 ≈ 1.493 */
+            aspect-ratio: 1030 / 690;
+            top: 50%;
+            /* shift right so tree sits centre-right */
+            left: 50%;
+            opacity: 0.10;
+            z-index: 0;
+            pointer-events: none;
+            animation: continuousScale var(--t-pine-scale) cubic-bezier(.8,1,.8,1) both;
+            transform-origin: center center;
+            transform: translate(-20%, -50%);
+        }
 
-    @keyframes introFadeIn {
-      from { opacity: 0; transform: scale(0.94); }
-      to   { opacity: 1; transform: scale(1); }
-    }
+        /* ── INTRO TITLE (phase 1) ── */
+        .intro-title {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5%;
+            z-index: 10;
+            pointer-events: none;
+            animation:
+                introFadeIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) var(--t-fade-in) both,
+                introRetract 0.7s cubic-bezier(0.55, 0, 1, 0.45) var(--t-retract) both;
+        }
 
-    /* retract: shrink + move up, then disappear (the real header takes over) */
-    @keyframes introRetract {
-      0%   { opacity: 1; transform: translateY(0)   scale(1); }
-      70%  { opacity: 0; transform: translateY(-240px) scale(0.55); }
-      100% { opacity: 0; transform: translateY(-260px) scale(0.5);  pointer-events: none; }
-    }
+        .intro-title h1 {
+            color: var(--green-light);
+            /* fluid font: ~5vw, clamped */
+            font-size: clamp(28px, 5vw, 72px);
+            font-weight: bold;
+            line-height: 1.2;
+            text-align: center;
+            word-break: break-word;
+        }
 
-    /* ── CARD LAYOUT (phase 2) ── */
-    /* All card children are hidden until 2.8 s then revealed */
-    .card-header,
-    .card-body {
-      position: absolute;
-      z-index: 5;
-    }
+        @keyframes introFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.94);
+            }
 
-    /* ── HEADER BAR ── */
-    .card-header {
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 112px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 24px;
-    }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
 
-    /* Logo left */
-    .logo-left {
-      position: absolute;
-      left: 28px;
-      top: 50%;
-      transform: translateX(0) translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-      /* slide from left */
-      animation: slideFromLeft 0.65s cubic-bezier(0.22,1,0.36,1) 7.2s both;
-    }
+        @keyframes introRetract {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
 
-    .logo-left img {
-      width: 130px;
-      height: auto;
-      object-fit: contain;
-      display: block;
-    }
+            70% {
+                opacity: 0;
+                transform: translateY(-30vh) scale(0.55);
+            }
 
-    /* placeholder when image absent */
-    .logo-placeholder {
-      width: 130px;
-      height: 50px;
-      background: rgba(255,255,255,0.12);
-      border: 2px dashed rgba(255,255,255,0.35);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,0.5);
-      font-size: 11px;
-      font-family: 'Lato', sans-serif;
-      text-align: center;
-      line-height: 1.3;
-    }
-    .logo-sub {
-      color: rgba(255,255,255,0.75);
-      font-family: 'Lato', sans-serif;
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.5px;
-    }
+            100% {
+                opacity: 0;
+                transform: translateY(-32vh) scale(0.5);
+            }
+        }
 
-    /* Centre title */
-    .header-title {
-      text-align: center;
-      color: var(--green-light);
-      font-size: 36px;
-      font-weight: 800;
-      line-height: 1.2;
-      animation: fadeUp 0.55s cubic-bezier(0.22,1,0.36,1) 7.05s both;
-    }
+        @keyframes continuousScale {
+            0% {
+                scale: 1;
+            }
 
-    /* QR code right */
-    .qr-block {
-      position: absolute;
-      right: 28px;
-      top: 50%;
-      transform: translateX(0) translateY(-50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      animation: slideFromRight 0.65s cubic-bezier(0.22,1,0.36,1) 7.2s both;
-    }
+            100% {
+                scale: 1.2;
+            }
+        }
 
-    .qr-img {
-      width: 90px;
-      height: 90px;
-      background: rgba(255,255,255,0.12);
-      border: 2px dashed rgba(255,255,255,0.35);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: rgba(255,255,255,0.5);
-      font-size: 10px;
-      font-family: 'Lato', sans-serif;
-      text-align: center;
-    }
+        /* ── HEADER ── */
+        .card-header {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            /* fluid height ~15% of viewport */
+            height: 15vh;
+            min-height: 70px;
+            max-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 2%;
+            flex-shrink: 0;
+        }
 
-    .qr-label {
-      color: var(--white);
-      font-family: 'Lato', sans-serif;
-      font-size: 11px;
-      font-weight: 700;
-      text-align: center;
-      letter-spacing: 0.4px;
-      line-height: 1.3;
-      text-transform: uppercase;
-    }
+        /* Logo left */
+        .logo-left {
+            position: absolute;
+            left: 2.2%;
+            top: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3vh;
+            animation: slideFromLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--t-slide-sides) both;
+        }
 
-    /* ── BODY ── */
-    .card-body {
-      top: 112px;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 20px 80px 32px;
-      gap: 18px;
-      animation: slideFromBottom 0.7s cubic-bezier(0.22,1,0.36,1) 7.1s both;
-    }
+        .logo-left img {
+            /* 500×136 → display ~13vw wide, min/max clamped */
+            width: clamp(90px, 13vw, 180px);
+            height: auto;
+            object-fit: contain;
+            display: block;
+        }
 
-    /* Image box with mask */
-    .image-box {
-      width: 100%;
-      max-width: 800px;
-      height: 370px;
-      border-radius: 20px;
-      overflow: hidden;
-      background: var(--gray-placeholder);
-      flex-shrink: 0;
-      position: relative;
-    }
+        /* Centre title */
+        .header-title {
+            text-align: center;
+            color: var(--green-light);
+            font-size: clamp(16px, 2.6vw, 42px);
+            font-weight: bold;
+            line-height: 1.2;
+            /* leave room for logo and QR */
+            max-width: 55%;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--t-header-title) both;
+        }
 
-    .image-box img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      display: block;
-    }
+        /* QR block right */
+        .qr-block {
+            position: absolute;
+            right: 2.2%;
+            top: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6vh;
+            /* match logo top margin feel */
+            margin-top: 0;
+            animation: slideFromRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--t-slide-sides) both;
+        }
 
-    /* Text pill */
-    .text-pill {
-      background: var(--white);
-      border-radius: 999px;
-      padding: 20px 48px;
-      max-width: 800px;
-      width: 100%;
-      text-align: center;
-    }
+        .qr-block img,
+        .qr-img-placeholder {
+            width: clamp(60px, 10vw, 150px);
+            height: clamp(60px, 10vw, 150px);
+            object-fit: contain;
+            display: block;
+            border-radius: 4px;
+        }
 
-    .text-pill p {
-      font-family: 'Lato', sans-serif;
-      font-size: 20px;
-      font-weight: 400;
-      color: #1a3a30;
-      line-height: 1.55;
-    }
+        .qr-label {
+            color: var(--white);
+            font-size: clamp(8px, 0.85vw, 13px);
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.4px;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
 
-    /* Corner accents (bottom-right rounded bracket decoration) */
-    .corner-accent {
-      position: absolute;
-      bottom: 36px;
-      right: 36px;
-      width: 52px;
-      height: 52px;
-      border: 4px solid var(--green-light);
-      border-radius: 14px;
-      border-top: none;
-      border-left: none;
-      z-index: 6;
-      animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) 7.35s both;
-    }
+        /* ── BODY ── */
+        .card-body {
+            position: relative;
+            z-index: 5;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 1.5vh 6% 2.5vh;
+            gap: 1.8vh;
+            animation: slideFromBottom 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--t-body) both;
+            overflow: hidden;
+        }
 
-    /* ── ANIMATIONS ── */
-    @keyframes slideFromLeft {
-      from { opacity: 0; transform: translateX(-80px) translateY(-50%); }
-      to   { opacity: 1; transform: translateX(0)     translateY(-50%); }
-    }
+        /* Image box */
+        .image-box {
+            width: 100%;
+            max-width: 820px;
+            /* flex-grow so it fills available vertical space */
+            flex: 1 1 0;
+            min-height: 0;
+            border-radius: clamp(10px, 1.8vw, 22px);
+            overflow: hidden;
+            background: #8a8a8a;
+        }
 
-    @keyframes slideFromRight {
-      from { opacity: 0; transform: translateX(80px) translateY(-50%); }
-      to   { opacity: 1; transform: translateX(0)    translateY(-50%); }
-    }
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+            animation: continuousScale var(--t-img-scale) cubic-bezier(.8,1,.8,1) var(--t-body) both;
+        }
 
-    @keyframes slideFromBottom {
-      from { opacity: 0; transform: translateY(80px); }
-      to   { opacity: 1; transform: translateY(0);    }
-    }
+        /* Text pill */
+        .text-pill {
+            background: var(--white);
+            border-radius: 999px;
+            padding: clamp(12px, 2vh, 24px) clamp(20px, 4%, 56px);
+            max-width: 1200px;
+            width: 100%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(14px); }
-      to   { opacity: 1; transform: translateY(0);    }
-    }
+        .text-pill p {
+            font-size: clamp(13px, 3vw, 28px);
+            font-weight: normal;
+            color: #1a3a30;
+            line-height: 1;
+            text-align: center;
+            word-break: break-word;
+        }
 
-    /* Respect reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      * { animation-duration: 0.01ms !important; animation-delay: 0ms !important; }
-    }
-  </style>
+        /* ── KEYFRAMES ── */
+        @keyframes slideFromLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-80px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(80px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideFromBottom {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Respect reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-delay: 0ms !important;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<div class="scene">
+    <div class="scene">
 
-  <!-- Background pattern -->
-  <div class="bg-pattern"></div>
+        <!-- Pine tree watermark -->
+        <img class="bg-pine" src="pinheiro.svg" alt="" aria-hidden="true" />
 
-  <!-- Pine tree watermark SVG -->
-  <svg class="bg-pine" viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <!-- Trunk -->
-    <rect x="88" y="220" width="24" height="36" rx="4" fill="white"/>
-    <!-- Bottom layer -->
-    <polygon points="100,130 28,220 172,220" fill="white"/>
-    <!-- Middle layer -->
-    <polygon points="100,70 36,160 164,160" fill="white"/>
-    <!-- Top layer -->
-    <polygon points="100,10 48,110 152,110" fill="white"/>
-  </svg>
+        <!-- ═══ PHASE 1: Intro title (populated by JS from JSON) ═══ -->
+        <div class="intro-title" aria-hidden="true">
+            <h1 id="intro-h1">…</h1>
+        </div>
 
-  <!-- ═══════════════════════════ PHASE 1: Intro title ═══════════════════════════ -->
-  <div class="intro-title" aria-hidden="true">
-    <h1>Lorem Ipsum Dolor<br>Sit Amet</h1>
-  </div>
+        <!-- ═══ PHASE 2: Card layout ═══ -->
 
-  <!-- ═══════════════════════════ PHASE 2: Card layout ═══════════════════════════ -->
+        <header class="card-header">
+            <!-- Logo top-left -->
+            <div class="logo-left">
+                <img src="unimed-logo.png" alt="Unimed Araçatuba" />
+            </div>
 
-  <!-- Header -->
-  <header class="card-header">
+            <!-- Centre title -->
+            <h2 class="header-title" id="header-title">…</h2>
 
-    <!-- Logo top-left (placeholder) -->
-    <div class="logo-left">
-      <div class="logo-placeholder">LOGO<br>UNIMED</div>
-      <span class="logo-sub">Araçatuba</span>
+            <!-- QR code + label top-right -->
+            <div class="qr-block">
+                <img id="qr-img" src="" alt="QR Code — Leia a matéria na íntegra" />
+                <p class="qr-label">Leia a matéria<br>na íntegra</p>
+            </div>
+        </header>
+
+        <main class="card-body">
+            <!-- Image masked box -->
+            <div class="image-box">
+                <img id="main-img" src="" alt="Imagem da matéria" loading="eager" />
+            </div>
+
+            <!-- Text pill -->
+            <div class="text-pill">
+                <p id="subtitle-text">…</p>
+            </div>
+        </main>
+
     </div>
 
-    <!-- Centre title -->
-    <h2 class="header-title">Lorem Ipsum Dolor<br>Sit Amet</h2>
+    <script>
+        (async () => {
+            // Read ?item=N from the URL (1-based); default to 1
+            const params = new URLSearchParams(window.location.search);
+            const itemParam = parseInt(params.get('item'), 10);
 
-    <!-- QR code + label top-right -->
-    <div class="qr-block">
-      <div class="qr-img">QR<br>CODE</div>
-      <p class="qr-label">Leia a matéria<br>na íntegra</p>
-    </div>
+            try {
+                const res = await fetch('feed.json');
+                const data = await res.json();
 
-  </header>
+                // Convert 1-based param to 0-based index; fall back to first item
+                const idx = (Number.isFinite(itemParam) && itemParam >= 1 && itemParam <= data.length)
+                    ? itemParam - 1
+                    : 0;
 
-  <!-- Body -->
-  <main class="card-body">
+                const item = data[idx];
 
-    <!-- Image masked box -->
-    <div class="image-box">
-      <img
-        src="https://blocks.astratic.com/img/general-img-portrait.png"
-        alt="Imagem da matéria"
-        loading="eager"
-      />
-    </div>
+                // Populate text
+                document.getElementById('intro-h1').textContent = item.title;
+                document.getElementById('header-title').textContent = item.title;
+                document.getElementById('subtitle-text').textContent = item.subtitle;
 
-    <!-- Text pill -->
-    <div class="text-pill">
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent condimentum convallis purus sed dictum. Sed facilisis rhoncus dui eget facilisis.</p>
-    </div>
+                // Populate images
+                document.getElementById('main-img').src = item.image;
+                document.getElementById('main-img').alt = item.title;
+                document.getElementById('qr-img').src = item.qr;
 
-  </main>
-
-  <!-- Corner accent decoration -->
-  <div class="corner-accent" aria-hidden="true"></div>
-
-</div>
+            } catch (err) {
+                console.error('Could not load feed.json:', err);
+                // Fallback visible text
+                ['intro-h1', 'header-title'].forEach(id => {
+                    document.getElementById(id).textContent = 'Sem título';
+                });
+                document.getElementById('subtitle-text').textContent = 'Conteúdo não disponível.';
+            }
+        })();
+    </script>
 
 </body>
+
 </html>
