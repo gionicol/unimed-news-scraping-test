@@ -8,14 +8,6 @@
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/bec9d46bc5034b5b5b7c77a1e82ab83e.png"
   },
   {
-    "title": "HUA reforça importância da higiene das mãos em UBSs",
-    "subtitle": "Realizada a convite da Zatti Saúde, a ação promoveu orientações sobre a correta higienização das mãos nas UBSs de Araçatuba, fortalecendo a prevenção de infecções na rede de atenção à saúde.",
-    "date": "Fri, 29 May 2026 12:00:00 -0000",
-    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/hua-refor%C3%A7a-import%C3%A2ncia-da-higiene-das-m%C3%A3os-em-ubss?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
-    "image": "https://www.unimed.coop.br/site/documents/29485795/87648936/WhatsApp+Image+2026-05-29+at+12.50.20.jpeg/aa81c379-e03a-e8c3-2c7e-5d8a966af0d0?version=1.0&t=1780071027602&imagePreview=1",
-    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/287d671d3c9070ab67a6d7126ba64fc1.png"
-  },
-  {
     "title": "HUA promove Maio Roxo com pacientes oncológicos",
     "subtitle": "Evento realizado pelo Centro de Terapia Antineoplásica reuniu pacientes, familiares e especialistas em uma tarde de acolhimento, informação e cuidado humanizado.",
     "date": "Mon, 01 Jun 2026 12:00:00 -0000",
@@ -46,6 +38,14 @@
     "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-refor%C3%A7a-cultura-esg-com-palestras?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
     "image": "https://www.unimed.coop.br/site/documents/29485795/88437039/WhatsApp+Image+2026-06-11+at+08.32.08.jpeg/ccfc7806-4d51-107c-78c9-e6d286fc9262?version=1.0&t=1781182684865&imagePreview=1",
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/ad0d0bf46c7c79d4010de9650b31abb2.png"
+  },
+  {
+    "title": "Colaboradora integra livro que destaca mulheres em Compras",
+    "subtitle": "Com 24 anos de história na cooperativa, Tatiana de Freitas tem sua trajetória reconhecida nacionalmente ao integrar livro que reúne mulheres que inspiram, lideram e transformam o setor de Compras no Brasil.",
+    "date": "Tue, 16 Jun 2026 12:00:00 -0000",
+    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/colaboradora-da-unimed-ara%C3%A7atuba-integra-livro-que-destaca-mulheres-em-compras?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
+    "image": "https://www.unimed.coop.br/site/documents/29485795/88774047/ChatGPT+Image+16+de+jun.+de+2026%2C+16_10_51.png/f82e0929-a0fb-bb3b-5e1e-2cbbf051a5d6?version=1.0&t=1781637068569&imagePreview=1",
+    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/348cdd0073df2a5a65c8fc46d4224d2c.png"
   },
   {
     "title": "Unimed Araçatuba leva experiências sobre TEA a encontro estadual",
