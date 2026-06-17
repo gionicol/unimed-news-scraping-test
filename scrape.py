@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from datetime import datetime
 from email.utils import format_datetime
+# from email.utils import parsedate_to_datetime
 from xml.sax.saxutils import escape
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -41,9 +42,6 @@ MONTHS = {
     "Dezembro": 12
 }
 
-def xml_safe(text):
-    return escape(text, {"\"": "&quot;"})
-
 
 def parse_date(date_text):
     parts = date_text.replace(" de ", " ").split()
@@ -56,6 +54,9 @@ def parse_date(date_text):
 
     return format_datetime(dt)
 
+
+def xml_safe(text):
+    return escape(text, {"\"": "&quot;"})
 
 
 def generate_qr(article_url):
@@ -275,10 +276,10 @@ def main():
 
     final_data = scrape()
     
-    final_data.sort(
-        key=lambda x: x["date"],
-        reverse=False
-    )
+    # final_data.sort(
+    #     key=lambda x: parsedate_to_datetime(x["date"]),
+    #     reverse=True
+    # )
 
     new_fp = fingerprint(
         final_data
