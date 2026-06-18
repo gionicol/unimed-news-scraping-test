@@ -7,7 +7,13 @@ import certifi
 import time
 
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import (
+    urlparse,
+    parse_qsl,
+    urlencode,
+    urlunparse,
+    urljoin
+)
 from datetime import datetime
 from email.utils import format_datetime
 # from email.utils import parsedate_to_datetime
@@ -24,8 +30,10 @@ REPO = os.getenv("GITHUB_REPOSITORY", "local/local")
 GITHUB_PAGES_URL = f"https://{REPO.split('/')[0]}.github.io/{REPO.split('/')[1]}"
 
 QR_FOLDER = "qr"
+IMG_FOLDER = "img"
 
 os.makedirs(QR_FOLDER, exist_ok=True)
+os.makedirs(IMG_FOLDER, exist_ok=True)
 
 MONTHS = {
     "Janeiro": 1,
@@ -41,6 +49,33 @@ MONTHS = {
     "Novembro": 11,
     "Dezembro": 12
 }
+
+def get_hash_from_filename(filename):
+    """
+    Strips the file extension and any '-hq' tags to extract the core MD5 hash.
+    Example: 'abc123xyz-hq.png' -> 'abc123xyz'
+    """
+    file_base_name, _ = os.path.splitext(filename)
+    return file_base_name.replace("-hq", "")
+
+
+def find_existing_file(folder, exact_base_name):
+    """
+    Checks if a file with the exact base name exists in the folder, 
+    ignoring its extension. Returns the full filename if found, else None.
+    Example: If looking for 'abc123xyz-hq', it matches 'abc123xyz-hq.webp'
+    """
+    if not os.path.exists(folder):
+        return None
+        
+    for filename in os.listdir(folder):
+        file_base_name, _ = os.path.splitext(filename)
+        if file_base_name == exact_base_name:
+            full_path = os.path.join(folder, filename)
+            # Ensure it's a valid file and not corrupted (0 bytes)
+            if os.path.getsize(full_path) > 0:
+                return filename
+    return None
 
 
 def parse_date(date_text):
@@ -71,7 +106,7 @@ def generate_qr(article_url):
         filename
     )
 
-    if not os.path.exists(filepath):
+    if (not os.path.exists(filepath) or os.path.getsize(filepath) == 0):
         img = qrcode.make(article_url)
         img.save(filepath)
 
@@ -80,6 +115,35 @@ def generate_qr(article_url):
     )
 
     return qr_url
+
+
+def remove_image_preview(url):
+
+    parsed = urlparse(url)
+
+    query = parse_qsl(
+        parsed.query,
+        keep_blank_values=True
+    )
+
+    query = [
+        (k, v)
+        for k, v in query
+        if k != "imagePreview"
+    ]
+
+    new_query = urlencode(query)
+
+    return urlunparse(
+        (
+            parsed.scheme,
+            parsed.netloc,
+            parsed.path,
+            parsed.params,
+            new_query,
+            parsed.fragment
+        )
+    )
 
 
 def get_session():
@@ -97,6 +161,63 @@ def get_session():
     session.mount("https://", adapter)
 
     return session
+
+
+def download_file(url, filepath):
+
+    try:
+        session = get_session()
+
+        response = session.get(
+            url,
+            timeout=30,
+            headers={
+                "User-Agent": "Mozilla/5.0 (compatible; NewsBot/1.0)"
+            },
+            verify=False
+        )
+        
+    except requests.exceptions.RequestException as e:
+        # Catches Timeouts, ConnectionErrors, DNS drops, etc.
+        print(f"Network error occurred: {e}. Retrying anyway...")
+
+    response.raise_for_status()
+
+    with open(filepath, "wb") as f:
+        f.write(response.content)
+
+
+def process_images(article_url, image_url):
+    """
+    Verifies if normal and HQ images exist under any extension. 
+    Downloads them if missing, and returns the correct GitHub Pages URLs.
+    """
+    image_hash = hashlib.md5(article_url.encode()).hexdigest()
+    
+    # 1. Check if files already exist with ANY extension
+    existing_normal = find_existing_file(IMG_FOLDER, image_hash)
+    existing_hq = find_existing_file(IMG_FOLDER, f"{image_hash}-hq")
+    
+    # 2. Handle Normal Image
+    if existing_normal:
+        normal_filename = existing_normal
+    else:
+        normal_filename = f"{image_hash}.jpg"  # Default fallback extension
+        download_file(image_url, os.path.join(IMG_FOLDER, normal_filename))
+        
+    # 3. Handle HQ Image
+    hq_url = remove_image_preview(image_url)
+    if existing_hq:
+        hq_filename = existing_hq
+    else:
+        hq_filename = f"{image_hash}-hq.jpg"   # Default fallback extension
+        download_file(hq_url, os.path.join(IMG_FOLDER, hq_filename))
+
+    # 4. Return the exact asset paths matching the real extensions
+    return {
+        "image": f"{GITHUB_PAGES_URL}/img/{normal_filename}",
+        "image_hq": f"{GITHUB_PAGES_URL}/img/{hq_filename}"
+    }
 
 
 def scrape():
@@ -163,12 +284,18 @@ def scrape():
             article_url
         )
 
+        images = process_images(
+            article_url,
+            image_url
+        )
+
         articles.append({
             "title": title,
             "subtitle": subtitle,
             "date": parse_date(date),
             "url": article_url,
-            "image": image_url,
+            "image": images["image"],
+            "image_hq": images["image_hq"],
             "qr": qr_url
         })
 
@@ -272,6 +399,29 @@ def fingerprint(data):
     ).hexdigest()
 
 
+def cleanup_files(articles):
+    """
+    Deletes files in IMG_FOLDER and QR_FOLDER that do not correspond 
+    to the hashes of active articles, independent of their extension or -hq suffix.
+    """
+    # Create a set of all valid hashes from active articles
+    valid_hashes = {
+        hashlib.md5(article["url"].encode()).hexdigest() 
+        for article in articles
+    }
+
+    # Clean up target folders
+    for folder in [IMG_FOLDER, QR_FOLDER]:
+        if not os.path.exists(folder):
+            continue
+            
+        for filename in os.listdir(folder):
+            file_hash = get_hash_from_filename(filename)
+            
+            if file_hash not in valid_hashes:
+                os.remove(os.path.join(folder, filename))
+
+
 def main():
 
     final_data = scrape()
@@ -300,6 +450,10 @@ def main():
             "No content changes."
         )
         return
+
+    cleanup_files(
+        final_data
+    )
 
     save_json(final_data)
 
