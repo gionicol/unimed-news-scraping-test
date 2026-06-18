@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="#">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
+    <title>Unimed Araçatuba</title>
+    <style>
+        @font-face {
+            font-family: 'Unmdsns';
+            font-style: normal;
+            font-weight: normal;
+            src: url(fonts/rg.otf) format('opentype');
+        }
+        
+        @font-face {
+            font-family: 'Unmdsns';
+            font-style: normal;
+            font-weight: bold;
+            src: url(fonts/bd.otf) format('opentype');
+        }
+        
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* ── COLOR SCHEMES ──
+        Applied via data-theme attribute on <html>.
+        Each scheme overrides the CSS variables below.        */
+        
+        /* Theme 0 — original dark green */
+        :root,
+        [data-theme="0"] {
+            --bg: #004F4A;
+            --pine: #07524D;
+            --title: #B1D452;
+            --pill-bg: #FFFFFF;
+            --pill-text: #004F4A;
+            --ui-ink: #FFFFFF;
+        }
+        
+        [data-theme="1"] {
+            --bg: #B1D452;
+            --pine: #BCD479;
+            --title: #07524D;
+            --pill-bg: #008B51;
+            --pill-text: #FFFFFF;
+            --ui-ink: #07524D;
+        }
+        
+        [data-theme="2"] {
+            --bg: #00995D;
+            --pine: #0CAD6E;
+            --title: #FFFFFF;
+            --pill-bg: #004F4C;
+            --pill-text: #FFFFFF;
+            --ui-ink: #FFFFFF;
+        }
+        
+        [data-theme="3"] {
+            --bg: #FFFFFF;
+            --pine: #E5E5E5;
+            --title: #004F4C;
+            --pill-bg: #004F4C;
+            --pill-text: #FFFFFF;
+            --ui-ink: #004F4C;
+        }
+        
+        [data-theme="4"] {
+            --bg: #F57921;
+            --pine: #EB8741;
+            --title: #FFFFFF;
+            --pill-bg: #FFFFFF;
+            --pill-text: #004F4A;
+            --ui-ink: #FFFFFF;
+        }
+        
+        html,
+        body {
+            font-family: "Unmdsns";
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg);
+        }
+        
+        /* ── SCENE ── */
+        .scene {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-color: var(--bg);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0s;
+            /* instant — theme set before paint */
+        }
+        
+        /* ── PINE TREE BACKGROUND ── */
+        .bg-pine {
+            position: absolute;
+            height: 115vh;
+            width: auto;
+            aspect-ratio: 1030 / 690;
+            top: 50%;
+            left: 50%;
+            z-index: 0;
+            pointer-events: none;
+            transform-origin: center center;
+            transform: translate(-20%, -50%);
+            transform: translate(-20%, -50%, 1px);
+        }
+        
+        /* ── INTRO TITLE (phase 1) ── */
+        .intro-title {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* narrower than full width so it feels tighter */
+            padding: 5% 18%;
+            z-index: 10;
+            pointer-events: none;
+        }
+        
+        .intro-title h1 {
+            color: var(--title);
+            font-size: clamp(28px, 5vw, 72px);
+            font-weight: bold;
+            line-height: 1.2;
+            text-align: center;
+            word-break: break-word;
+        }
+        
+        /* ── HEADER ── */
+        .card-header {
+            position: relative;
+            z-index: 5;
+            width: 100%;
+            height: 15vh;
+            min-height: 70px;
+            max-height: 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 2%;
+            flex-shrink: 0;
+        }
+        
+        /* Logo left */
+        .logo-left {
+            position: absolute;
+            left: 2.2%;
+            top: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3vh;
+        }
+        
+        /* SVG logo — colour driven by currentColor / fill on the SVG itself.
+        We set the wrapper's color to --ui-ink so any `fill="currentColor"`
+        in the SVG picks it up. We also force it via a CSS filter as fallback. */
+        .logo-left svg,
+        .logo-left img {
+            width: clamp(90px, 13vw, 180px);
+            height: auto;
+            object-fit: contain;
+            display: block;
+            /* colour override: all paths become --ui-ink */
+            color: var(--ui-ink);
+        }
+        
+        
+        #logo-container {
+            color: var(--ui-ink);
+        }
+        
+        #logo-container svg,
+        #logo-container svg * {
+            fill: currentColor !important;
+            stroke: currentColor !important;
+        }
+        
+        
+        .bg-pine {
+            color: var(--pine);
+        }
+        
+        .bg-pine svg,
+        .bg-pine svg * {
+            fill: currentColor !important;
+        }
+        
+        #logo-container {
+            color: var(--ui-ink);
+        }
+        
+        #logo-container svg,
+        #logo-container svg * {
+            fill: currentColor !important;
+        }
+        
+        /* Centre title */
+        .header-title {
+            text-align: center;
+            color: var(--title);
+            font-size: clamp(16px, 2.8vw, 42px);
+            font-weight: bold;
+            line-height: 1.2;
+            max-width: 55%;
+            word-break: break-word;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* QR block right */
+        .qr-block {
+            position: absolute;
+            right: 2.2%;
+            top: 20%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6vh;
+        }
+        
+        .qr-block img {
+            width: clamp(60px, 11vw, 150px);
+            height: clamp(60px, 11vw, 150px);
+            object-fit: contain;
+            display: block;
+            border-radius: 4px;
+        }
+        
+        .qr-label {
+            color: var(--ui-ink);
+            font-size: clamp(8px, 1.2vw, 16px);
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.4px;
+            line-height: 1.3;
+            text-transform: uppercase;
+        }
+        
+        /* ── BODY ── */
+        .card-body {
+            position: relative;
+            z-index: 5;
+            
+            flex: 1 1 auto;
+            min-height: 0;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            
+            padding: 1.5vh 6% 2.5vh;
+            gap: 1.8vh;
+            
+            overflow: hidden;
+        }
+        
+        .image-box {
+            aspect-ratio: 1.65 / 1;
+            
+            flex: 0 1 auto;
+            
+            width: auto;
+            
+            border-radius: clamp(10px, 1.8vw, 22px);
+            overflow: hidden;
+            background: #8a8a8a;
+            
+            align-self: center;
+            
+            transform: translateZ(1px);
+        }
+        
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            
+            object-fit: cover;
+            object-position: center;
+            
+            display: block;
+            
+            transform: translateZ(1px);
+        }
+        
+        /* Text pill */
+        .text-pill {
+            background: var(--pill-bg);
+            
+            border-radius: 999px;
+            
+            padding:
+            clamp(12px, 2vh, 24px) clamp(20px, 4%, 56px);
+            
+            width: 100%;
+            max-width: 1200px;
+            
+            flex: 0 0 auto;
+            
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .text-pill p {
+            font-size: clamp(13px, 3vw, 28px);
+            font-weight: normal;
+            color: var(--pill-text);
+            line-height: 1;
+            text-align: center;
+            word-break: break-word;
+        }
+        
+        /* ==========================================================
+        GSAP INITIAL STATES
+        ========================================================== */
+        
+        .image-box img,
+        .bg-pine {
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+        
+        .intro-title {
+            opacity: 0;
+            transform: scale(.94);
+            transform: translateZ(1px) scale(.94);
+        }
+        
+        .header-title {
+            opacity: 0;
+            transform: translateY(12px);
+            transform: translateZ(1px) translateY(12px);
+        }
+        
+        .logo-left {
+            opacity: 0;
+            transform: translateX(-80px);
+            transform: translateZ(1px) translateX(-80px);
+        }
+        
+        .qr-block {
+            opacity: 0;
+            transform: translateX(80px);
+            transform: translateZ(1px) translateX(80px);
+        }
+        
+        .card-body {
+            opacity: 0;
+            transform: translateY(60px);
+            transform: translateZ(1px) translateY(60px);
+        }
+        
+        /* fallback for browsers without aspect-ratio */
+        
+        .image-box {
+            width: auto;
+            overflow: hidden; 
+        }
+        
+        .image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            display: block;
+        }        
+    </style>
+    <script type="text/javascript">
+        const hasNativeSupport = ((window || {}).CSS || {}).supports && window.CSS.supports('(--a: 0)');
+        
+        if (!hasNativeSupport) {
+            import("https://unpkg.com/css-vars-ponyfill@2.4.9/dist/css-vars-ponyfill.min.js")
+            .then(cssVars => {
+                cssVars();
+            });
+        }
+    </script>
+</head>
+
+<body>
+    
+    <div class="scene">
+        
+        <!-- Pine tree watermark -->
+        <div class="bg-pine" id="bg-pine" aria-hidden="true">
+            <?xml version="1.0" encoding="utf-8"?>
+            <!-- Generator: Adobe Illustrator 29.8.2, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->
+            <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 1030 690"
+            style="enable-background:new 0 0 1030 690;" xml:space="preserve" fill="#1F6D5E">
+            <path class="st0" d="M80.44,688.33h217.61c12.74,0,19.62-3.91,26.47-12.76L465.8,483.83c2.94-3.91,5.88-8.82,5.88-13.74
+            c0-6.85-6.88-10.79-18.65-10.79h-81.26c-12.74,0-19.62-5.88-19.62-13.74c0-4.89,2.94-9.8,5.88-13.71l129.5-173.83
+            c2.94-3.91,5.88-8.82,5.88-13.74c0-7.83-6.88-13.74-19.62-13.74H377.5c-12.74,0-19.62-4.88-19.62-12.74
+            c0-4.91,2.94-10.79,5.88-14.71l125.73-167.1c6.88-8.82,16.68-11.77,25.53-11.77c8.82,0,18.62,2.94,25.5,11.77L666.23,203.1
+            c2.94,3.91,5.88,9.8,5.88,14.71c0,7.85-6.86,12.74-19.62,12.74h-96.31c-12.74,0-19.62,5.91-19.62,13.74c0,4.91,2.94,9.82,5.88,13.74
+            l129.5,173.83c2.94,3.91,5.88,8.82,5.88,13.71c0,7.85-6.88,13.74-19.62,13.74h-81.26c-11.77,0-18.65,3.94-18.65,10.79
+            c0,4.91,2.94,9.82,5.88,13.74l141.27,191.74c6.86,8.85,14.71,12.76,26.47,12.76h217.61c15.7,0,24.53-5.88,24.53-15.71
+            c0-5.88-2.94-11.77-5.88-15.68l-127.5-173.12c-2.94-3.91-5.88-8.82-5.88-13.74c0-6.85,6.88-10.79,18.65-10.79h153.03
+            c15.68,0,23.53-5.88,23.53-15.68c0-5.88-2.94-11.77-5.88-15.71L711.2,13.43c-5.88-7.83-11.77-11.77-25.5-11.77H334.51
+            c-8.82,0-18.65,1.97-25.5,11.77L5.88,427.91C1.97,433.79,0,438.71,0,443.62c0,9.8,7.85,15.68,23.56,15.68h153.01
+            c11.79,0,18.65,3.94,18.65,10.79c0,4.91-2.94,9.82-5.88,13.74L61.8,656.95c-2.94,3.91-5.88,9.8-5.88,15.68
+            C55.91,682.45,64.74,688.33,80.44,688.33" />
+        </svg>
+    </div>
+    
+    <!-- ═══ PHASE 1: Intro title ═══ -->
+    <div class="intro-title" aria-hidden="true">
+        <h1 id="intro-h1">…</h1>
+    </div>
+    
+    <!-- ═══ PHASE 2: Card layout ═══ -->
+    <header class="card-header">
+        <div class="logo-left">
+            <!-- SVG logo inlined at runtime by JS so CSS color cascades into it -->
+            <div id="logo-container">
+                <?xml version="1.0" encoding="utf-8"?>
+                <!-- Generator: Adobe Illustrator 29.8.2, SVG Export Plug-In . SVG Version: 9.03 Build 0)  -->
+                <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 500 139"
+                style="enable-background:new 0 0 500 139;" xml:space="preserve" fill="#FFFFFF">
+                <g>
+                    <path class="st0" d="M207.84,127.31v0.46h-5.65l-1.9-6.03h-10.41l-1.85,6.03h-5.69v-0.46l9.52-29.03h6.45L207.84,127.31z
+                    M198.74,116.69l-3.67-11.71l-3.62,11.71H198.74z" />
+                    <path class="st0" d="M224.23,106.58l-0.76,4.97c-0.8-0.17-1.39-0.25-2.11-0.25c-1.73,0-3.29,0.42-4.55,1.1v15.38h-5.27V106.7h3.62
+                    l0.8,1.81c1.6-1.52,3.54-2.36,5.81-2.36C222.71,106.16,223.64,106.36,224.23,106.58" />
+                    <path class="st0" d="M243.78,113.4v14.37h-3.24l-0.76-1.31c-1.52,1.18-3.33,1.85-5.77,1.85c-4.93,0-7.79-2.78-7.79-6.53
+                    c0-3.96,2.78-6.62,8.13-6.62h4.17v-0.76c0-2.32-1.77-3.58-5.02-3.58c-1.81,0-3.96,0.34-5.86,0.88l-0.89-4.38
+                    c2.61-0.76,5.52-1.18,7.96-1.18C241.29,106.15,243.78,109.15,243.78,113.4 M234.97,124.06c1.22,0,2.44-0.25,3.54-0.8v-4.09h-3.67
+                    c-2.28,0-3.24,1.01-3.24,2.4C231.6,123.13,232.91,124.06,234.97,124.06" />
+                    <path class="st0"
+                    d="M264.34,133.63c0,2.86-2.44,5.14-6.74,5.14c-2.06,0-4.04-0.51-5.14-0.93l1.14-4c0.8,0.29,1.81,0.63,2.91,0.63
+                    c1.64,0,2.44-0.46,2.44-1.43c0-0.93-1.14-1.47-3.03-1.77l0.38-3.2c-5.22-0.93-8.47-4.76-8.47-10.58c0-6.99,4.42-11.33,11.8-11.33
+                    c1.94,0,3.75,0.29,5.52,0.76l-0.76,4.68c-1.43-0.42-2.78-0.63-4.13-0.63c-4.25,0-6.95,2.36-6.95,6.45c0,4,2.53,6.07,6.99,6.07
+                    c1.35,0,2.82-0.3,4.34-0.72l0.8,4.51c-1.69,0.55-3.24,0.89-4.84,1.01l-0.13,1.01C262.95,129.58,264.34,131.22,264.34,133.63" />
+                    <path class="st0" d="M285.79,113.4v14.37h-3.24l-0.76-1.31c-1.52,1.18-3.33,1.85-5.77,1.85c-4.93,0-7.79-2.78-7.79-6.53
+                    c0-3.96,2.78-6.62,8.13-6.62h4.17v-0.76c0-2.32-1.77-3.58-5.02-3.58c-1.81,0-3.96,0.34-5.86,0.88l-0.89-4.38
+                    c2.61-0.76,5.52-1.18,7.96-1.18C283.3,106.15,285.79,109.15,285.79,113.4 M276.98,124.06c1.22,0,2.44-0.25,3.54-0.8v-4.09h-3.67
+                    c-2.28,0-3.24,1.01-3.24,2.4C273.61,123.13,274.92,124.06,276.98,124.06" />
+                    <path class="st0" d="M303.27,127.43c-1.56,0.72-2.91,0.88-4.55,0.88c-3.83,0-6.87-2.15-6.87-7.08v-9.9l-3.16-0.34v-4.3h3.16
+                    l0.8-6.32h4.42v6.32h5.6v4.64h-5.6v8.93c0,2.57,1.26,3.16,3.46,3.16c0.59,0,1.14-0.09,1.85-0.3L303.27,127.43z" />
+                    <path class="st0" d="M324.76,106.7v21.07h-3.58l-0.55-1.39c-1.85,1.14-4.17,1.94-6.95,1.94c-4.68,0-7.42-2.86-7.42-7.12V106.7h5.27
+                    v13.1c0,2.27,1.18,3.62,3.71,3.62c1.77,0,3.08-0.38,4.3-0.97V106.7H324.76z" />
+                    <path class="st0" d="M350.34,116.86c0,7-4.26,11.46-10.11,11.46c-2.27,0-4.21-0.55-5.69-1.81l-0.55,1.26h-3.58v-31.6h5.27v11.12
+                    c1.43-0.76,3.12-1.14,5.01-1.14C346.71,106.15,350.34,110.07,350.34,116.86 M344.94,117.03c0-4.09-2.15-6.32-5.52-6.32
+                    c-1.3,0-2.61,0.25-3.75,0.8v10.74c1.1,0.84,2.28,1.26,3.75,1.26C342.88,123.51,344.94,121.37,344.94,117.03" />
+                    <path class="st0" d="M370.94,113.4v14.37h-3.24l-0.76-1.31c-1.52,1.18-3.33,1.85-5.77,1.85c-4.93,0-7.79-2.78-7.79-6.53
+                    c0-3.96,2.78-6.62,8.13-6.62h4.17v-0.76c0-2.32-1.77-3.58-5.02-3.58c-1.81,0-3.96,0.34-5.86,0.88l-0.89-4.38
+                    c2.61-0.76,5.52-1.18,7.96-1.18C368.45,106.15,370.94,109.15,370.94,113.4 M362.14,124.06c1.22,0,2.44-0.25,3.54-0.8v-4.09h-3.67
+                    c-2.28,0-3.24,1.01-3.24,2.4C358.77,123.13,360.07,124.06,362.14,124.06" />
+                    <path class="st0" d="M0,5.63c0-0.77,0.67-1.44,1.44-1.44h17.33c0.77,0,1.44,0.68,1.44,1.44v38.9c0,7.22,3.47,11.65,11.36,11.65
+                    c7.9,0,11.27-4.43,11.27-11.65V5.63c0-0.77,0.67-1.44,1.44-1.44h17.33c0.77,0,1.44,0.68,1.44,1.44v37.74
+                    c0,16.95-8.47,29.17-31.48,29.17C8.47,72.54,0,60.31,0,43.37V5.63z M72.69,70.13V21.99c0-0.77,0.67-1.44,1.44-1.44H90.5
+                    c0.77,0,1.44,0.67,1.44,1.44v8.76c2.31-6.93,10.01-11.17,18.2-11.17c9.63,0,15.69,5,15.69,18.29v32.25c0,0.77-0.67,1.44-1.44,1.44
+                    h-16.37c-0.77,0-1.44-0.68-1.44-1.44v-28.5c0-4.62-1.54-7.41-7.12-7.41c-5.68,0-7.51,1.06-7.51,2.79v33.12
+                    c0,0.77-0.68,1.44-1.44,1.44H74.13C73.36,71.58,72.69,70.9,72.69,70.13 M144.51,0.24c8.38,0,10.69,0.77,10.69,7.61
+                    c0,7.03-2.31,7.7-10.69,7.7c-8.38,0-10.78-0.67-10.78-7.7C133.73,1.01,136.13,0.24,144.51,0.24 M134.98,21.99
+                    c0-0.77,0.68-1.44,1.44-1.44h16.37c0.77,0,1.44,0.67,1.44,1.44v48.14c0,0.77-0.67,1.44-1.44,1.44h-16.37
+                    c-0.77,0-1.44-0.68-1.44-1.44V21.99z M163.86,21.99c0-0.77,0.68-1.44,1.44-1.44h16.37c0.77,0,1.44,0.67,1.44,1.44v8.76
+                    c2.31-6.93,9.92-11.17,17.52-11.17c7.41,0,12.71,3.18,14.63,10.59c2.6-6.64,10.3-10.59,17.91-10.59c9.53,0,15.79,5,15.79,17.33
+                    v33.22c0,0.77-0.67,1.44-1.44,1.44h-16.37c-0.77,0-1.44-0.68-1.44-1.44v-28.5c0-4.62-1.54-7.41-6.64-7.41
+                    c-5.2,0-7.03,1.06-7.03,2.79v33.12c0,0.77-0.67,1.44-1.44,1.44h-16.37c-0.77,0-1.44-0.68-1.44-1.44v-28.5
+                    c0-4.62-1.54-7.41-6.64-7.41c-5.2,0-7.03,1.06-7.03,2.79v33.12c0,0.77-0.67,1.44-1.44,1.44h-16.37c-0.77,0-1.44-0.68-1.44-1.44
+                    V21.99z M284.21,19.59c17.81,0,25.61,9.82,25.61,25.03c0,3.27,0.1,6.45-3.75,6.45h-29.75c0.96,6.07,4.43,8.28,15.89,8.28h14.63
+                    c0.96,0,1.73,0.87,1.54,1.83l-1.54,7.8c-0.1,0.48-0.29,0.77-0.58,0.87c-4.62,1.92-11.46,2.69-19.45,2.69
+                    c-20.99,0-30.43-10.11-30.43-26.67C256.39,29.31,265.53,19.59,284.21,19.59 M292.11,41.63c0-5.97-1.73-9.72-7.6-9.72
+                    c-4.91,0-7.7,2.31-8.38,9.72H292.11z M335.05,19.59c7.8,0,13.09,3.75,16.17,10.01V5.6c0-0.77,0.67-1.44,1.44-1.44h16.37
+                    c0.77,0,1.44,0.67,1.44,1.44v64.54c0,0.77-0.68,1.44-1.44,1.44h-16.37c-0.77,0-1.44-0.68-1.44-1.44v-7.61
+                    c-3.08,6.26-8.38,10.01-16.17,10.01c-13.29,0-18.48-10.97-18.48-26.48S321.76,19.59,335.05,19.59 M344.77,58.58
+                    c4.53,0,6.45-2.02,6.45-4.62V37.59c0-2.7-2.5-4.04-6.45-4.04c-5.68,0-7.99,3.95-7.99,12.52S339.09,58.58,344.77,58.58" />
+                    <path class="st0" d="M406.77,71.59h21.37c1.25,0,1.93-0.38,2.6-1.25l13.87-18.83c0.29-0.38,0.58-0.87,0.58-1.35
+                    c0-0.67-0.68-1.06-1.83-1.06h-7.98c-1.25,0-1.93-0.58-1.93-1.35c0-0.48,0.29-0.96,0.58-1.35l12.71-17.07
+                    c0.29-0.38,0.58-0.87,0.58-1.35c0-0.77-0.68-1.35-1.93-1.35h-9.46c-1.25,0-1.93-0.48-1.93-1.25c0-0.48,0.29-1.06,0.58-1.44
+                    l12.34-16.41c0.68-0.87,1.64-1.16,2.51-1.16c0.87,0,1.83,0.29,2.5,1.16l12.34,16.41c0.29,0.38,0.58,0.96,0.58,1.44
+                    c0,0.77-0.67,1.25-1.93,1.25h-9.46c-1.25,0-1.93,0.58-1.93,1.35c0,0.48,0.29,0.96,0.58,1.35l12.71,17.07
+                    c0.29,0.38,0.58,0.87,0.58,1.35c0,0.77-0.68,1.35-1.93,1.35h-7.98c-1.16,0-1.83,0.39-1.83,1.06c0,0.48,0.29,0.96,0.58,1.35
+                    l13.87,18.83c0.67,0.87,1.44,1.25,2.6,1.25h21.37c1.54,0,2.41-0.58,2.41-1.54c0-0.58-0.29-1.16-0.58-1.54l-12.52-17
+                    c-0.29-0.38-0.58-0.87-0.58-1.35c0-0.67,0.68-1.06,1.83-1.06h15.02c1.54,0,2.31-0.58,2.31-1.54c0-0.58-0.29-1.16-0.58-1.54
+                    L468.7,5.33c-0.58-0.77-1.16-1.16-2.5-1.16h-34.48c-0.87,0-1.83,0.19-2.5,1.16l-29.76,40.69c-0.38,0.58-0.58,1.06-0.58,1.54
+                    c0,0.96,0.77,1.54,2.31,1.54h15.02c1.16,0,1.83,0.39,1.83,1.06c0,0.48-0.29,0.96-0.58,1.35l-12.52,17
+                    c-0.29,0.38-0.58,0.96-0.58,1.54C404.37,71.01,405.23,71.59,406.77,71.59" />
+                </g>
+            </svg>
+        </div>
+    </div>
+    
+    <h2 class="header-title" id="header-title">…</h2>
+    
+    <div class="qr-block">
+        <img id="qr-img" src="" alt="QR Code — Leia a matéria na íntegra" />
+        <p class="qr-label">Leia a matéria<br>na íntegra</p>
+    </div>
+</header>
+
+<main class="card-body">
+    <div class="image-box">
+        <img id="main-img" src="" alt="Imagem da matéria" loading="eager" />
+    </div>
+    <div class="text-pill">
+        <p id="subtitle-text">…</p>
+    </div>
+</main>
+
+</div>
+
+<script type="text/javascript">
+    
+    (async () => {
+        
+        const DEFAULT_DELAY = 6.4;
+        
+        function getIntroDelay() {
+            
+            const params =
+            new URLSearchParams(window.location.search);
+            
+            const value =
+            parseFloat(params.get('delay'));
+            
+            return Number.isFinite(value)
+            ? Math.max(0, value)
+            : DEFAULT_DELAY;
+        }
+        
+        const introDelay = getIntroDelay();
+        
+        function supportsAspectRatio() {
+            
+            return (
+            window.CSS &&
+            CSS.supports &&
+            CSS.supports('aspect-ratio', '1 / 1')
+            );
+            
+        }
+        
+        function updateImageBox() {            
+            const body =
+            document.querySelector('.card-body');
+            
+            const imageBox =
+            document.querySelector('.image-box');
+            
+            const pill =
+            document.querySelector('.text-pill');
+            
+            if (!body || !imageBox || !pill) {
+                return;
+            }
+            
+            const gap =
+            parseFloat(
+            getComputedStyle(body).gap
+            ) || 0;
+            
+            const aspect = 1.65;
+            
+            const availableHeight =
+            body.clientHeight -
+            pill.offsetHeight -
+            gap;
+            
+            let height =
+            Math.max(100, availableHeight);
+            
+            let width =
+            height * aspect;
+            
+            const maxWidth =
+            Math.min(
+            820,
+            body.clientWidth
+            );
+            
+            if (width > maxWidth) {
+                
+                width = maxWidth;
+                
+                height =
+                width / aspect;
+            }
+            
+            imageBox.style.width =
+            width + 'px';
+            
+            imageBox.style.height =
+            height + 'px';
+        }
+        
+        function clampValue(min, preferred, max) {
+            return Math.min(
+            max,
+            Math.max(min, preferred)
+            );
+        }
+        
+        function supportsClamp() {
+            
+            return (
+            window.CSS &&
+            CSS.supports &&
+            CSS.supports(
+            'font-size',
+            'clamp(1px,2px,3px)'
+            )
+            );
+            
+        }
+        
+        function updateResponsiveSizes() {
+            
+            const vw =
+            window.innerWidth;
+            
+            const introSize =
+            clampValue(
+            28,
+            vw * 0.05,
+            72
+            );
+            
+            document.querySelector(
+            '.intro-title h1'
+            ).style.fontSize =
+            introSize + 'px';
+        }
+        
+        function startAnimations() {
+            
+            const tl =
+            gsap.timeline();
+            
+            tl.to('.intro-title', {
+                opacity: 1,
+                scale: 1,
+                duration: 0.9,
+                ease: 'power3.out'
+            });
+            
+            tl.to({}, {
+                duration: introDelay
+            });
+            
+            tl.to('.intro-title', {
+                y: '-32vh',
+                scale: 0.5,
+                opacity: 0,
+                duration: 0.7,
+                ease: 'power2.in'
+            });
+            
+            tl.to('.header-title', {
+                opacity: 1,
+                y: 0,
+                duration: 0.55,
+                ease: 'power3.out'
+            }, '-=0.05');
+            
+            tl.to('.card-body', {
+                opacity: 1,
+                y: 0,
+                duration: 0.7,
+                ease: 'power3.out'
+            }, '-=0.5');
+            
+            tl.to('.logo-left', {
+                opacity: 1,
+                x: 0,
+                duration: 0.65,
+                ease: 'power3.out'
+            }, '-=0.55');
+            
+            tl.to('.qr-block', {
+                opacity: 1,
+                x: 0,
+                duration: 0.65,
+                ease: 'power3.out'
+            }, '<');
+            
+            gsap.to('.bg-pine', {
+                scale: 1.1,
+                duration: 19,
+                ease: 'none'
+            });
+            
+            gsap.to('.image-box img', {
+                scale: 1.1,
+                duration: 11.9,
+                ease: 'none',
+                delay: introDelay + 0.7
+            });
+            
+        }
+        
+        function upgradeImage(imgEl) {
+            
+            const lowSrc =
+            imgEl.src;
+            
+            const hiSrc =
+            lowSrc.replace(
+            /&ImagePreview=\d+/gi,
+            ''
+            );
+            
+            if (hiSrc === lowSrc) {
+                return;
+            }
+            
+            const preload =
+            new Image();
+            
+            preload.onload = () => {
+                imgEl.src = hiSrc;
+            };
+            
+            preload.src = hiSrc;
+        }
+        
+        try {
+            
+            const res =
+            await fetch('feed.json');
+            
+            const data =
+            await res.json();
+            
+            const today =
+            new Date();
+            
+            const maxMs =
+            15 * 24 * 60 * 60 * 1000;
+            
+            const validItems =
+            data.filter(item => {
+                
+                const diff =
+                today -
+                new Date(item.date);
+                
+                return (
+                diff >= 0 &&
+                diff <= maxMs
+                );
+                
+            });
+            
+            if (!validItems.length) {
+                throw new Error(
+                'No recent items'
+                );
+            }
+            
+            let lastIndex =
+            parseInt(
+            localStorage.getItem(
+            'lastSeenNewsIndex'
+            ),
+            10
+            ) || 0;
+            
+            if (
+            lastIndex >=
+            validItems.length
+            ) {
+                lastIndex = 0;
+            }
+            
+            const item =
+            validItems[lastIndex];
+            
+            localStorage.setItem(
+            'lastSeenNewsIndex',
+            (lastIndex + 1) %
+            validItems.length
+            );
+            
+            const THEME_COUNT = 5;
+            
+            let themeIndex =
+            parseInt(
+            localStorage.getItem(
+            'lastSeenThemeIndex'
+            ),
+            10
+            ) || 0;
+            
+            if (
+            themeIndex >=
+            THEME_COUNT
+            ) {
+                themeIndex = 0;
+            }
+            
+            localStorage.setItem(
+            'lastSeenThemeIndex',
+            (themeIndex + 1) %
+            THEME_COUNT
+            );
+            
+            document.documentElement
+            .setAttribute(
+            'data-theme',
+            String(themeIndex)
+            );
+            
+            document.getElementById(
+            'intro-h1'
+            ).textContent =
+            item.title;
+            
+            document.getElementById(
+            'header-title'
+            ).textContent =
+            item.title;
+            
+            document.getElementById(
+            'subtitle-text'
+            ).textContent =
+            item.subtitle;
+            
+            const mainImg =
+            document.getElementById(
+            'main-img'
+            );
+            
+            mainImg.src =
+            item.image;
+            
+            mainImg.alt =
+            item.title;
+            
+            const qrMatch =
+            item.qr.match(
+            /qr\/.*\.png$/g
+            );
+            
+            document.getElementById(
+            'qr-img'
+            ).src =
+            qrMatch
+            ? qrMatch[0]
+            : item.qr;
+            
+            if (
+            mainImg.complete &&
+            mainImg.naturalWidth > 0
+            ) {
+                
+                upgradeImage(mainImg);
+                
+            } else {
+                
+                mainImg.addEventListener(
+                'load',
+                () => upgradeImage(mainImg),
+                { once: true }
+                );
+                
+            }
+            
+            if (!supportsAspectRatio()) {
+                updateImageBox();
+                window.addEventListener(
+                'resize',
+                updateImageBox
+                );
+            }
+            if (!supportsClamp()) {
+                updateResponsiveSizes();
+                window.addEventListener(
+                'resize',
+                updateResponsiveSizes
+                );
+            }
+            
+            
+            startAnimations();
+            
+        } catch (err) {
+            
+            console.error(err);
+            
+        }
+        
+    })();
+</script>
+
+</body>
+
+</html>
