@@ -176,12 +176,12 @@ def download_file(url, filepath):
             },
             verify=False
         )
+
+        response.raise_for_status()
         
     except requests.exceptions.RequestException as e:
         # Catches Timeouts, ConnectionErrors, DNS drops, etc.
         print(f"Network error occurred: {e}. Retrying anyway...")
-
-    response.raise_for_status()
 
     with open(filepath, "wb") as f:
         f.write(response.content)
