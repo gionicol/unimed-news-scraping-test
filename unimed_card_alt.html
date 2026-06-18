@@ -97,7 +97,9 @@
             height: 100vh;
             background-color: var(--bg);
             overflow: hidden;
+            display: -webkit-flex;
             display: flex;
+            -webkit-flex-direction: column;
             flex-direction: column;
             transition: background-color 0s;
             /* instant — theme set before paint */
@@ -107,23 +109,37 @@
         .bg-pine {
             position: absolute;
             height: 115vh;
-            width: auto;
-            aspect-ratio: 1030 / 690;
+            /* aspect-ratio not supported in Chrome 80; compute from SVG's 1030/690 ratio */
+            width: calc(115vh * 1030 / 690);
             top: 50%;
             left: 50%;
             z-index: 0;
             pointer-events: none;
+            -webkit-transform-origin: center center;
             transform-origin: center center;
+            -webkit-transform: translate(-20%, -50%);
             transform: translate(-20%, -50%);
-            transform: translate(-20%, -50%, 1px);
+        }
+
+        /* Make the inline SVG fill its container div */
+        .bg-pine svg {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
         
         /* ── INTRO TITLE (phase 1) ── */
         .intro-title {
             position: absolute;
-            inset: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            display: -webkit-flex;
             display: flex;
+            -webkit-align-items: center;
             align-items: center;
+            -webkit-justify-content: center;
             justify-content: center;
             /* narrower than full width so it feels tighter */
             padding: 5% 18%;
@@ -148,10 +164,14 @@
             height: 15vh;
             min-height: 70px;
             max-height: 130px;
+            display: -webkit-flex;
             display: flex;
+            -webkit-align-items: center;
             align-items: center;
+            -webkit-justify-content: center;
             justify-content: center;
             padding: 0 2%;
+            -webkit-flex-shrink: 0;
             flex-shrink: 0;
         }
         
@@ -160,11 +180,15 @@
             position: absolute;
             left: 2.2%;
             top: 20%;
+            display: -webkit-flex;
             display: flex;
+            -webkit-flex-direction: column;
             flex-direction: column;
+            -webkit-align-items: center;
             align-items: center;
             gap: 0.3vh;
         }
+        .logo-left > * + * { margin-top: 0.3vh; }
         
         /* SVG logo — colour driven by currentColor / fill on the SVG itself.
         We set the wrapper's color to --ui-ink so any `fill="currentColor"`
@@ -218,8 +242,11 @@
             line-height: 1.2;
             max-width: 55%;
             word-break: break-word;
+            display: -webkit-flex;
             display: flex;
+            -webkit-align-items: center;
             align-items: center;
+            -webkit-justify-content: center;
             justify-content: center;
         }
         
@@ -228,11 +255,15 @@
             position: absolute;
             right: 2.2%;
             top: 20%;
+            display: -webkit-flex;
             display: flex;
+            -webkit-flex-direction: column;
             flex-direction: column;
+            -webkit-align-items: center;
             align-items: center;
             gap: 0.6vh;
         }
+        .qr-block > * + * { margin-top: 0.6vh; }
         
         .qr-block img {
             width: clamp(60px, 11vw, 150px);
@@ -257,22 +288,35 @@
             position: relative;
             z-index: 5;
             
+            -webkit-flex: 1 1 auto;
             flex: 1 1 auto;
             min-height: 0;
+            /* Fallback for WebViews that ignore min-height:0 on flex children */
+            height: 1px;
             
+            display: -webkit-flex;
             display: flex;
+            -webkit-flex-direction: column;
             flex-direction: column;
+            -webkit-align-items: center;
             align-items: center;
             
             padding: 1.5vh 6% 2.5vh;
+            /* gap not supported in Chrome 80 flexbox; use child margins instead */
             gap: 1.8vh;
             
             overflow: hidden;
         }
         
+        /* Flex gap fallback for Chrome 80: add top margin to all but first child */
+        .card-body > * + * {
+            margin-top: 1.8vh;
+        }
+        
         .image-box {
             aspect-ratio: 1.65 / 1;
             
+            -webkit-flex: 0 1 auto;
             flex: 0 1 auto;
             
             width: auto;
@@ -281,9 +325,8 @@
             overflow: hidden;
             background: #8a8a8a;
             
+            -webkit-align-self: center;
             align-self: center;
-            
-            transform: translateZ(1px);
         }
         
         .image-box img {
@@ -294,8 +337,6 @@
             object-position: center;
             
             display: block;
-            
-            transform: translateZ(1px);
         }
         
         /* Text pill */
@@ -304,16 +345,23 @@
             
             border-radius: 999px;
             
-            padding:
-            clamp(12px, 2vh, 24px) clamp(20px, 4%, 56px);
+            /* clamp() in padding shorthand is buggy on Chrome 80; use padding-top/bottom separately */
+            padding-top: 16px;
+            padding-bottom: 16px;
+            padding-left: 4%;
+            padding-right: 4%;
             
             width: 100%;
             max-width: 1200px;
             
+            -webkit-flex: 0 0 auto;
             flex: 0 0 auto;
             
+            display: -webkit-flex;
             display: flex;
+            -webkit-align-items: center;
             align-items: center;
+            -webkit-justify-content: center;
             justify-content: center;
         }
         
@@ -333,37 +381,38 @@
         .image-box img,
         .bg-pine {
             will-change: transform;
+            -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
         }
         
         .intro-title {
             opacity: 0;
+            -webkit-transform: scale(.94);
             transform: scale(.94);
-            transform: translateZ(1px) scale(.94);
         }
         
         .header-title {
             opacity: 0;
+            -webkit-transform: translateY(12px);
             transform: translateY(12px);
-            transform: translateZ(1px) translateY(12px);
         }
         
         .logo-left {
             opacity: 0;
+            -webkit-transform: translateX(-80px);
             transform: translateX(-80px);
-            transform: translateZ(1px) translateX(-80px);
         }
         
         .qr-block {
             opacity: 0;
+            -webkit-transform: translateX(80px);
             transform: translateX(80px);
-            transform: translateZ(1px) translateX(80px);
         }
         
         .card-body {
             opacity: 0;
+            -webkit-transform: translateY(60px);
             transform: translateY(60px);
-            transform: translateZ(1px) translateY(60px);
         }
         
         /* fallback for browsers without aspect-ratio */
@@ -382,13 +431,12 @@
         }        
     </style>
     <script type="text/javascript">
-        const hasNativeSupport = ((window || {}).CSS || {}).supports && window.CSS.supports('(--a: 0)');
-        
+        var hasNativeSupport = !!(((window || {}).CSS || {}).supports && window.CSS.supports('(--a: 0)'));
         if (!hasNativeSupport) {
-            import("https://unpkg.com/css-vars-ponyfill@2.4.9/dist/css-vars-ponyfill.min.js")
-            .then(cssVars => {
-                cssVars();
-            });
+            var s = document.createElement('script');
+            s.src = 'https://unpkg.com/css-vars-ponyfill@2.4.9/dist/css-vars-ponyfill.min.js';
+            s.onload = function() { if (typeof cssVars === 'function') cssVars(); };
+            document.head.appendChild(s);
         }
     </script>
 </head>
@@ -563,17 +611,18 @@
                 return;
             }
             
-            const gap =
-            parseFloat(
-            getComputedStyle(body).gap
-            ) || 0;
+            // Chrome 80 flex doesn't support gap; fall back to margin-top value
+            var computedGap = parseFloat(getComputedStyle(body).gap);
+            if (!computedGap || isNaN(computedGap)) {
+                computedGap = parseFloat(getComputedStyle(pill).marginTop) || 0;
+            }
             
             const aspect = 1.65;
             
             const availableHeight =
             body.clientHeight -
             pill.offsetHeight -
-            gap;
+            computedGap;
             
             let height =
             Math.max(100, availableHeight);
@@ -627,17 +676,63 @@
             const vw =
             window.innerWidth;
             
-            const introSize =
-            clampValue(
-            28,
-            vw * 0.05,
-            72
-            );
+            const vh =
+            window.innerHeight;
             
-            document.querySelector(
-            '.intro-title h1'
-            ).style.fontSize =
-            introSize + 'px';
+            // .intro-title h1 — clamp(28px, 5vw, 72px)
+            const introSize =
+            clampValue(28, vw * 0.05, 72);
+            document.querySelector('.intro-title h1').style.fontSize = introSize + 'px';
+            
+            // .header-title — clamp(16px, 2.8vw, 42px)
+            const headerTitleEl = document.querySelector('.header-title');
+            if (headerTitleEl) {
+                headerTitleEl.style.fontSize = clampValue(16, vw * 0.028, 42) + 'px';
+            }
+            
+            // .text-pill p — clamp(13px, 3vw, 28px)
+            const pillText = document.querySelector('.text-pill p');
+            if (pillText) {
+                pillText.style.fontSize = clampValue(13, vw * 0.03, 28) + 'px';
+            }
+            
+            // .qr-label — clamp(8px, 1.2vw, 16px)
+            const qrLabel = document.querySelector('.qr-label');
+            if (qrLabel) {
+                qrLabel.style.fontSize = clampValue(8, vw * 0.012, 16) + 'px';
+            }
+            
+            // .logo-left svg/img — clamp(90px, 13vw, 180px)
+            const logoEl = document.querySelector('.logo-left svg, .logo-left img');
+            if (logoEl) {
+                const logoSize = clampValue(90, vw * 0.13, 180);
+                logoEl.style.width = logoSize + 'px';
+            }
+            
+            // .qr-block img — clamp(60px, 11vw, 150px)
+            const qrImg = document.querySelector('.qr-block img');
+            if (qrImg) {
+                const qrSize = clampValue(60, vw * 0.11, 150);
+                qrImg.style.width = qrSize + 'px';
+                qrImg.style.height = qrSize + 'px';
+            }
+            
+            // .image-box border-radius — clamp(10px, 1.8vw, 22px)
+            const imgBox = document.querySelector('.image-box');
+            if (imgBox) {
+                imgBox.style.borderRadius = clampValue(10, vw * 0.018, 22) + 'px';
+            }
+            
+            // .text-pill padding — equivalent of clamp(12px,2vh,24px) vertical / clamp(20px,4%,56px) horizontal
+            const pill = document.querySelector('.text-pill');
+            if (pill) {
+                const pillV = clampValue(12, vh * 0.02, 24);
+                const pillH = clampValue(20, vw * 0.04, 56);
+                pill.style.paddingTop = pillV + 'px';
+                pill.style.paddingBottom = pillV + 'px';
+                pill.style.paddingLeft = pillH + 'px';
+                pill.style.paddingRight = pillH + 'px';
+            }
         }
         
         function startAnimations() {
@@ -711,16 +806,11 @@
             
             const lowSrc =
             imgEl.src;
+
+            console.log(lowSrc);
             
             const hiSrc =
-            lowSrc.replace(
-            /&ImagePreview=\d+/gi,
-            ''
-            );
-            
-            if (hiSrc === lowSrc) {
-                return;
-            }
+            lowSrc.replace(/(.*)(\/?img\/.*)\.(.*)$/g,"$2-hq.$3");
             
             const preload =
             new Image();
@@ -838,16 +928,23 @@
             document.getElementById(
             'main-img'
             );
+
+            const mainImgMatch =
+            item.image.match(
+            /img\/.*\..*$/g
+            );
             
             mainImg.src =
-            item.image;
+            mainImgMatch
+            ? mainImgMatch[0]
+            : item.image;
             
             mainImg.alt =
             item.title;
             
             const qrMatch =
             item.qr.match(
-            /qr\/.*\.png$/g
+            /qr\/.*\..*$/g
             );
             
             document.getElementById(
