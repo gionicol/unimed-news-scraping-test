@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Specifications Dashboard</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #1a202c;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+        .section-title {
+            color: #2b6cb0;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #edf2f7;
+            color: #4a5568;
+            font-weight: 600;
+            width: 30%;
+        }
+        tr:nth-child(even) {
+            background-color: #f7fafc;
+        }
+        tr:not(:last-child) {
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .value-text {
+            font-family: monospace;
+            word-break: break-all;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Current Browser Specifications</h1>
+    <div id="dashboard"></div>
+</div>
+
+<script>
+    // 1. Gather all browser aspects
+    const browserData = {
+        "Browser Identity & Engine": {
+            "User Agent": navigator.userAgent,
+            "Vendor": navigator.vendor || "N/A",
+            "Platform": navigator.platform,
+            "Language": navigator.language,
+            "Languages Preferred": navigator.languages.join(', '),
+            "Cookies Enabled": navigator.cookieEnabled ? "Yes" : "No",
+            "Online Status": navigator.onLine ? "Online" : "Offline"
+        },
+        "Window & Viewport Dimensions": {
+            "Viewport Width (Inner)": window.innerWidth + "px",
+            "Viewport Height (Inner)": window.innerHeight + "px",
+            "Browser Window Width (Outer)": window.outerWidth + "px",
+            "Browser Window Height (Outer)": window.outerHeight + "px",
+            "Device Pixel Ratio": window.devicePixelRatio
+        },
+        "Screen & Monitor Capabilities": {
+            "Screen Width": screen.width + "px",
+            "Screen Height": screen.height + "px",
+            "Available Width (Minus Taskbar)": screen.availWidth + "px",
+            "Available Height (Minus Taskbar)": screen.availHeight + "px",
+            "Color Depth": screen.colorDepth + " bits",
+            "Orientation": screen.orientation ? screen.orientation.type : "N/A"
+        },
+        "Features & Environment": {
+            "Current URL": window.location.href,
+            "Origin": window.location.origin,
+            "Referrer": document.referrer || "None",
+            "Max Touch Points": navigator.maxTouchPoints,
+            "PDF Viewer Built-in": navigator.pdfViewerEnabled ? "Yes" : "No",
+            "Local Storage Items": Object.keys(localStorage).length,
+            "Session Storage Items": Object.keys(sessionStorage).length
+        }
+    };
+
+    // 2. Build and inject HTML tables dynamically
+    const dashboard = document.getElementById('dashboard');
+    
+    for (const [sectionName, properties] of Object.entries(browserData)) {
+        // Create Section Title
+        const heading = document.createElement('h2');
+        heading.className = 'section-title';
+        heading.textContent = sectionName;
+        dashboard.appendChild(heading);
+
+        // Create Table
+        const table = document.createElement('table');
+        
+        for (const [key, value] of Object.entries(properties)) {
+            const row = table.insertRow();
+            
+            const cellKey = row.insertCell(0);
+            cellKey.textContent = key;
+            
+            const cellValue = row.insertCell(1);
+            cellValue.className = 'value-text';
+            cellValue.textContent = value;
+        }
+        
+        dashboard.appendChild(table);
+    }
+</script>
+
+</body>
+</html>
