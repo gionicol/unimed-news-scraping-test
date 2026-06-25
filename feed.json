@@ -1,5 +1,14 @@
 [
   {
+    "title": "Unimed Araçatuba disponibiliza emissão de boletos pelo WhatsApp",
+    "subtitle": "Novo canal permite que beneficiários solicitem boletos de forma rápida, prática e segura pelo WhatsApp oficial da cooperativa.",
+    "date": "Thu, 25 Jun 2026 12:00:00 -0000",
+    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-amplia-servi%C3%A7os-digitais-e-disponibiliza-emiss%C3%A3o-de-boletos-pelo-whatsapp?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
+    "image": "https://gionicol.github.io/unimed-news-scraping-test/img/068d6c03be147ea32b444795d490f5b9.jpg",
+    "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/068d6c03be147ea32b444795d490f5b9-hq.jpg",
+    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/068d6c03be147ea32b444795d490f5b9.png"
+  },
+  {
     "title": "Colaboradora integra livro que destaca mulheres em Compras",
     "subtitle": "Com 24 anos de história na cooperativa, Tatiana de Freitas tem sua trajetória reconhecida nacionalmente ao integrar livro que reúne mulheres que inspiram, lideram e transformam o setor de Compras no Brasil.",
     "date": "Tue, 16 Jun 2026 12:00:00 -0000",
@@ -61,14 +70,5 @@
     "image": "https://gionicol.github.io/unimed-news-scraping-test/img/a0d105fa0596733b98f1a40303921f66.jpg",
     "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/a0d105fa0596733b98f1a40303921f66-hq.jpg",
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/a0d105fa0596733b98f1a40303921f66.png"
-  },
-  {
-    "title": "Unimed Araçatuba abre inscrições da 8ª Unimed Run",
-    "subtitle": "Evento será realizado no dia 2 de agosto e reunirá até 850 participantes em uma manhã de esporte e qualidade de vida, com corrida de 6 km, Unimed Run Kids e premiação por categorias.",
-    "date": "Mon, 01 Jun 2026 12:00:00 -0000",
-    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/8%C2%AA-unimed-run-abre-inscri%C3%A7%C3%B5es-e-refor%C3%A7a-tradi%C3%A7%C3%A3o-de-esporte?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
-    "image": "https://gionicol.github.io/unimed-news-scraping-test/img/7dacd954826456f49b1467d1328bae95.jpg",
-    "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/7dacd954826456f49b1467d1328bae95-hq.jpg",
-    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/7dacd954826456f49b1467d1328bae95.png"
   }
 ]
