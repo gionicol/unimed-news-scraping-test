@@ -1,5 +1,14 @@
 [
   {
+    "title": "EVB oferece ultrassonografia aos beneficiários do Plano Essencial",
+    "subtitle": "Novo serviço reforça a assistência aos beneficiários do Plano Essencial, oferecendo mais comodidade, agilidade e uma experiência de cuidado ainda mais completa.",
+    "date": "Mon, 29 Jun 2026 12:00:00 -0000",
+    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/unimed-ara%C3%A7atuba-amplia-servi%C3%A7os-do-espa%C3%A7o-viver-bem-e-oferece-ultrassonografia-aos-clientes-do-plano-essencial?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
+    "image": "https://gionicol.github.io/unimed-news-scraping-test/img/460c6ce6294caa1c33dbdddbf9667e01.jpg",
+    "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/460c6ce6294caa1c33dbdddbf9667e01-hq.jpg",
+    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/460c6ce6294caa1c33dbdddbf9667e01.png"
+  },
+  {
     "title": "Unimed Araçatuba disponibiliza emissão de boletos pelo WhatsApp",
     "subtitle": "Novo canal permite que beneficiários solicitem boletos de forma rápida, prática e segura pelo WhatsApp oficial da cooperativa.",
     "date": "Thu, 25 Jun 2026 12:00:00 -0000",
@@ -61,14 +70,5 @@
     "image": "https://gionicol.github.io/unimed-news-scraping-test/img/7db5feb5eacea4de955f2836941ed91e.jpg",
     "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/7db5feb5eacea4de955f2836941ed91e-hq.jpg",
     "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/7db5feb5eacea4de955f2836941ed91e.png"
-  },
-  {
-    "title": "HUA promove Maio Roxo com pacientes oncológicos",
-    "subtitle": "Evento realizado pelo Centro de Terapia Antineoplásica reuniu pacientes, familiares e especialistas em uma tarde de acolhimento, informação e cuidado humanizado.",
-    "date": "Mon, 01 Jun 2026 12:00:00 -0000",
-    "url": "https://www.unimed.coop.br/site/web/aracatuba/-/hua-promove-maio-roxo-com-pacientes-oncol%C3%B3gicos?redirect=%2Fsite%2Fweb%2Faracatuba%2Fnoticias",
-    "image": "https://gionicol.github.io/unimed-news-scraping-test/img/a0d105fa0596733b98f1a40303921f66.jpg",
-    "image_hq": "https://gionicol.github.io/unimed-news-scraping-test/img/a0d105fa0596733b98f1a40303921f66-hq.jpg",
-    "qr": "https://gionicol.github.io/unimed-news-scraping-test/qr/a0d105fa0596733b98f1a40303921f66.png"
   }
 ]
